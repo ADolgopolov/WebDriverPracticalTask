@@ -19,6 +19,7 @@ public class AppTest
         WebDriver driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.navigate().to("https://accounts.ukr.net/login");
+        driver.manage().window().maximize();
         driver.findElement(By.name("login")).sendKeys("dolhopolov");
         driver.findElement(By.name("password")).sendKeys("Aa_445566");
         driver.findElement(By.xpath(".//button[@type='submit']")).click();
@@ -31,6 +32,7 @@ public class AppTest
         WebDriver driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         driver.navigate().to("https://accounts.ukr.net/login");
+        driver.manage().window().maximize();
         driver.findElement(By.name("login")).sendKeys("dolgopolov");
         driver.findElement(By.name("password")).sendKeys("Aa_4455666");
         driver.findElement(By.xpath(".//button[@type='submit']")).click();
@@ -43,6 +45,7 @@ public class AppTest
         WebDriver driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         driver.navigate().to("https://accounts.ukr.net/login");
+        driver.manage().window().maximize();
         driver.findElement(By.name("login")).sendKeys("dolhopolov");
         driver.findElement(By.xpath(".//button[@type='submit']")).click();
         Assert.assertNotNull(driver.findElement(By.xpath(".//a[contains(@href, \"recovery\")]")));
@@ -55,7 +58,7 @@ public class AppTest
         WebDriver driver = new ChromeDriver();
 
         driver.get("https://mail.aol.com/");
-
+        driver.manage().window().maximize();
         new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[@class=\"login\"]")))
                 .click();
@@ -85,7 +88,7 @@ public class AppTest
         driver = new ChromeDriver();
         // Got ukr.net mail url
         driver.get("https://accounts.ukr.net/login");
-
+        driver.manage().window().maximize();
         new WebDriverWait(driver, Duration.ofSeconds(20))
                 .until(ExpectedConditions.visibilityOfElementLocated(By.name("login")))
                 .sendKeys("dolhopolov");
