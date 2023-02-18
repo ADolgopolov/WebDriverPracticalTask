@@ -13,7 +13,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.time.Duration;
 
-public class AppTest 
+public class EmailServiceTest
 {
     @Test
     public void ukrNetCorrectLoginAndPasswordTest() {
@@ -59,7 +59,7 @@ public class AppTest
         String messageText = "Test message.";
         System.setProperty("webdriver.chrome.driver","c:\\chromedriver_win32\\chromedriver.exe");
         WebDriver driver = new ChromeDriver();
-        // Got aol.com mail
+        // Go to aol.com mail
         driver.get(AolCom.loginPageUrl);
         driver.manage().window().maximize();
 
@@ -77,7 +77,7 @@ public class AppTest
         driver.close();
 
         driver = new ChromeDriver();
-        // Got ukr.net mail
+        // Go to ukr.net mail
         driver.navigate().to(UkrNet.loginPageUrl);
         driver.manage().window().maximize();
         UkrNet.inputLogin(driver).sendKeys(UkrNet.login);

@@ -3,7 +3,7 @@
 <suite name="All Test Suite">
     <test verbose="2" name="F:/Prjct/WebDriverPracticalTask">
         <classes>
-            <class name="com.epam.training.student_andrii_dolhopolov.AppTest">
+            <class name="com.epam.training.student_andrii_dolhopolov.EmailServiceTest">
                 <methods>
                     <include name="ukrNetCorrectLoginAndPasswordTest"/>
                     <include name="ukrNetWrongLoginAndPasswordTest"/>
