@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 
 
@@ -17,7 +17,7 @@ public class EmailServiceTest
 {
     @Test
     public void ukrNetCorrectLoginAndPasswordTest() {
-        System.setProperty("webdriver.chrome.driver","src\\test\\resources\\chromedriver.exe");
+        WebDriverManager.chromedriver().setup();
         WebDriver driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         driver.navigate().to(UkrNet.loginPageUrl);
@@ -30,7 +30,7 @@ public class EmailServiceTest
     }
     @Test
     public void ukrNetWrongLoginAndPasswordTest() {
-        System.setProperty("webdriver.chrome.driver","src\\test\\resources\\chromedriver.exe");
+        WebDriverManager.chromedriver().setup();
         WebDriver driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         driver.navigate().to(UkrNet.loginPageUrl);
@@ -43,7 +43,7 @@ public class EmailServiceTest
     }
     @Test
     public void ukrNetEmptyPasswordTest() {
-        System.setProperty("webdriver.chrome.driver","src\\test\\resources\\chromedriver.exe");
+        WebDriverManager.chromedriver().setup();
         WebDriver driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         driver.navigate().to(UkrNet.loginPageUrl);
@@ -57,7 +57,7 @@ public class EmailServiceTest
     @Test
     public void SendReceiveEmailTest() {
         String messageText = "Test message.";
-        System.setProperty("webdriver.chrome.driver","src\\test\\resources\\chromedriver.exe");
+        WebDriverManager.chromedriver().setup();
         WebDriver driver = new ChromeDriver();
         // Go to aol.com mail
         driver.get(AolCom.loginPageUrl);
