@@ -1,93 +1,90 @@
 package com.epam.training.student_andrii_dolhopolov;
 
+import com.epam.training.student_andrii_dolhopolov.users_models.AolComUser;
+import com.epam.training.student_andrii_dolhopolov.users_models.UkrNetUser;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-
-import io.github.bonigarcia.wdm.WebDriverManager;
-
-
+import com.epam.training.student_andrii_dolhopolov.pageobject_models.aol_com.AolComStartPage;
+import com.epam.training.student_andrii_dolhopolov.pageobject_models.ukr_net.UkrNetLoginPage;
 
 
-import java.time.Duration;
+public class EmailServiceTest {
+    private WebDriver driver;
 
-public class EmailServiceTest
-{
+    @BeforeMethod(alwaysRun = true)
+    public void browserSetup() {
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+    }
+
+    @AfterMethod(alwaysRun = true)
+    public void browserTearDown() {
+        driver.quit();
+        driver = null;
+    }
+
     @Test
     public void ukrNetCorrectLoginAndPasswordTest() {
-        WebDriverManager.chromedriver().setup();
-        WebDriver driver = new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-        driver.navigate().to(UkrNet.loginPageUrl);
-        driver.manage().window().maximize();
-        UkrNet.inputLogin(driver).sendKeys(UkrNet.login);
-        UkrNet.inputPassword(driver).sendKeys(UkrNet.password);
-        UkrNet.buttonSubmit(driver).click();
-        Assert.assertTrue(UkrNet.isLoginComplete(driver));
-        driver.close();
+        boolean isLoginComplete = new UkrNetLoginPage(driver)
+                .openPage()
+                .enterLogin(UkrNetUser.LOGIN)
+                .enterPassword(UkrNetUser.PASSWORD)
+                .pushSubmitButton()
+                .isCompletedLogin();
+        Assert.assertTrue(isLoginComplete);
     }
+
     @Test
     public void ukrNetWrongLoginAndPasswordTest() {
-        WebDriverManager.chromedriver().setup();
-        WebDriver driver = new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-        driver.navigate().to(UkrNet.loginPageUrl);
-        driver.manage().window().maximize();
-        UkrNet.inputLogin(driver).sendKeys("user");
-        UkrNet.inputPassword(driver).sendKeys("password");
-        UkrNet.buttonSubmit(driver).click();
-        Assert.assertFalse(UkrNet.isLoginComplete(driver));
-        driver.close();
+        boolean isLoginComplete = new UkrNetLoginPage(driver)
+                .openPage()
+                .enterLogin("user")
+                .enterPassword("password")
+                .pushSubmitButton()
+                .isCompletedLogin();
+        Assert.assertFalse(isLoginComplete);
     }
+
     @Test
     public void ukrNetEmptyPasswordTest() {
-        WebDriverManager.chromedriver().setup();
-        WebDriver driver = new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-        driver.navigate().to(UkrNet.loginPageUrl);
-        driver.manage().window().maximize();
-        UkrNet.inputLogin(driver).sendKeys("user");
-        UkrNet.inputPassword(driver).sendKeys("");
-        UkrNet.buttonSubmit(driver).click();
-        Assert.assertFalse(UkrNet.isLoginComplete(driver));
-        driver.close();
+        boolean isLoginComplete = new UkrNetLoginPage(driver)
+                .openPage()
+                .enterLogin(UkrNetUser.LOGIN)
+                .enterPassword("")
+                .pushSubmitButton()
+                .isCompletedLogin();
+        Assert.assertFalse(isLoginComplete);
     }
+
     @Test
     public void SendReceiveEmailTest() {
-        String messageText = "Test message.";
-        WebDriverManager.chromedriver().setup();
-        WebDriver driver = new ChromeDriver();
-        // Go to aol.com mail
-        driver.get(AolCom.loginPageUrl);
-        driver.manage().window().maximize();
+        String sendMessageText = "Test message.";
 
-        AolCom.activateLoginPage(driver).click();
-        AolCom.inputLogin(driver).sendKeys(AolCom.login);
-        AolCom.buttonLoginSubmit(driver).click();
-        AolCom.inputPassword(driver).sendKeys(AolCom.password);
-        AolCom.buttonPasswordSubmit(driver).click();
+        // Go to aol.com mail-service
+        new AolComStartPage(driver)
+                .openStartPage()
+                .activateLoginPage()
+                .inputLogin(AolComUser.LOGIN)
+                .inputPassword(AolComUser.PASSWORD)
+                .sendMail(UkrNetUser.E_MAIL_ADDRESS, "Subject.", sendMessageText);
+        driver.quit();
 
-        AolCom.buttonCompose(driver).click();
-        AolCom.inputComposeRecipientAddress(driver).sendKeys("dolhopolov@ukr.net");
-        AolCom.inputComposeSubject(driver).sendKeys("Subject.");
-        AolCom.inputComposeText(driver).sendKeys(messageText);
-        AolCom.buttonComposeSend(driver).click();
-        driver.close();
-
+        // Go to ukr.net mail-service
         driver = new ChromeDriver();
-        // Go to ukr.net mail
-        driver.navigate().to(UkrNet.loginPageUrl);
         driver.manage().window().maximize();
-        UkrNet.inputLogin(driver).sendKeys(UkrNet.login);
-        UkrNet.inputPassword(driver).sendKeys(UkrNet.password);
-        UkrNet.buttonSubmit(driver).click();
+        String receivedMessageText = new UkrNetLoginPage(driver)
+                .openPage()
+                .enterLogin(UkrNetUser.LOGIN)
+                .enterPassword(UkrNetUser.PASSWORD)
+                .pushSubmitButton()
+                .waitForNewMessage()
+                .goToUnread()
+                .returnMessageTextFromSender("dolhopolov@aol.com");
 
-        // Make sure the email has arrived and is displayed as unread. Wait 10 minutes.
-        UkrNet.waitForNewMessage(driver);
-        UkrNet.buttonUnread(driver).click();
-        Assert.assertEquals(messageText, UkrNet.returnMessageTextFromSender(driver, "dolhopolov@aol.com"));
-        driver.close();
+        Assert.assertEquals(sendMessageText, receivedMessageText);
     }
 }
