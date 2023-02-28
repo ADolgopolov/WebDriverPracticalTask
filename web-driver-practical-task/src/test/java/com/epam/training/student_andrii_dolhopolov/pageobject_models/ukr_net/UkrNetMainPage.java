@@ -1,5 +1,6 @@
 package com.epam.training.student_andrii_dolhopolov.pageobject_models.ukr_net;
 
+import com.epam.training.student_andrii_dolhopolov.pageobject_models.AbstractPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -8,11 +9,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 import java.util.List;
 
-public class UkrNetMainPage {
-    private final WebDriver driver;
+public class UkrNetMainPage extends AbstractPage {
 
     public UkrNetMainPage(WebDriver driver) {
-        this.driver = driver;
+        super(driver);
     }
     public boolean isCompletedLogin() {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
